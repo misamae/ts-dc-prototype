@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,900' rel='stylesheet' type='text/css'>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+    <link href="jspm_packages/github/twbs/bootstrap@3.3.7/css/bootstrap.min.css">
+    <link href="./css/dc.css" rel="stylesheet">
+    <!--<link href="jspm_packages/npm/dc@2.0.0-beta.32/dc.min.css" rel="stylesheet">-->
+    <link href="./css/stylenew.css" rel="stylesheet">
+
+    <!--<script src="jspm_packages/github/twbs/bootstrap@3.3.7.js"></script>-->
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <h1>dashboard</h1>
+        <label for="organisationSelector">organisation</label>
+        <select id="organisationSelector">
+            <option>all</option>
+            <option>isfahan</option>
+            <option>tehran</option>
+            <option>gorgan</option>
+            <option>chaloos</option>
+        </select>
+    </div>
+
+    <div class="col-md-4">
+        <div class="6u chart-wrapper" id="signals-per-day-chart">
+            <div class="chart-title bold"> <strong> total signals per day </strong></div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="6u chart-wrapper" id="speed-per-imei">
+            <div class="chart-title bold"> <strong> speed </strong></div>
+        </div>
+    </div>
+
+    <div class="col-md-8 box">
+        <div class="6u chart-wrapper" id="imei-counts">
+            <div class="chart-title bold"> <strong> imei </strong></div>
+        </div>
+    </div>
+
+</div>
+
+<script src="jspm_packages/system.js"></script>
+<script src="config.js"></script>
+<script>
+    System.import('app');
+</script>
+</body>
+</html>

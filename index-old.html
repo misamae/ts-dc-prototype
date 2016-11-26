@@ -15,11 +15,6 @@
 </head>
 <body>
 
-<div>
-    <button class="btn btn-default" id="redrawButton">redraw</button>
-    <a href="date-prototype.html">date prototype</a>
-</div>
-
 <div class="container">
     <h1>dashboard</h1>
     <div class="row">
@@ -33,30 +28,35 @@
     </div>
 
     <div class="col-md-4">
-        <div class="chart-wrapper" id="speed-line">
-            <div class="chart-title bold"> <strong> speed </strong></div>
+        <div class="chart-wrapper" id="signals-per-day-chart">
+            <div class="chart-title bold"> <strong> total signals per day </strong></div>
         </div>
     </div>
 
     <div class="col-md-4">
-        <div class="chart-wrapper" id="signals-pie">
-            <div class="chart-title bold"> <strong> signals </strong></div>
+        <div class="chart-wrapper" id="average-speed-per-imei">
+            <div class="chart-title bold"> <strong> average speed per hour</strong></div>
         </div>
     </div>
 
-    <div class="col-md-4">
-        <div class="chart-wrapper" id="moving-pie">
-            <div class="chart-title bold"> <strong> signals </strong></div>
+    <!--<div class="col-md-4">-->
+        <!--<div class="6u chart-wrapper" id="speed-per-imei">-->
+            <!--<div class="chart-title bold"> <strong> speed </strong></div>-->
+        <!--</div>-->
+    <!--</div>-->
+
+    <div class="col-md-8 box">
+        <div class="chart-wrapper" id="imei-counts">
+            <div class="chart-title bold"> <strong> imei </strong></div>
         </div>
     </div>
-
 
 </div>
 
 <script src="jspm_packages/system.js"></script>
 <script src="config.js"></script>
 <script>
-    System.import('trucks');
+    System.import('app');
 </script>
 </body>
 </html>

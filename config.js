@@ -8,11 +8,13 @@ System.config({
   },
 
   map: {
+    "@types/jquery": "npm:@types/jquery@2.0.34",
     "bootstrap": "github:twbs/bootstrap@3.3.7",
     "crossfilter": "npm:crossfilter@1.3.12",
     "crossfilter2": "npm:crossfilter2@1.3.14",
     "d3": "npm:d3@3.5.17",
     "dc": "npm:dc@2.0.0-beta.32",
+    "jquery": "npm:jquery@3.1.1",
     "typescript": "npm:typescript@1.8.10",
     "github:jspm/nodelibs-assert@0.1.0": {
       "assert": "npm:assert@1.4.1"

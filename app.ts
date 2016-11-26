@@ -41,22 +41,27 @@ interface KeyGroupKey {
  * bar chart for imei average speed => DONE
  * line chart per imei and speed => DONE
 
+
+ * line chart per imei and average moving speed
+
  * organisation filter
  * Imei filter
  * registration number filter
 
- * line chart per imei and average moving speed
  */
 export class App {
 
     constructor() {
         d3.json('data/speeds.json', this.callback);
+
+        var dt = new Date(1476648357000);
+        var transformed = new Date(dt.getFullYear(), dt.getMonth() + 1, dt.getDate(), dt.getHours(), Math.floor(dt.getMinutes() / 10) * 10, 0, 0);
+        transformed.getTime()
     }
 
     callback(data: DataPoint[]) {
         let transformedData: TransformedDataPoint[] = data.map(d => {
             let date = new Date(d.timestamp);
-            // let dateFormatted = `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`;
             let dateFormatted = `${date.getFullYear()}/${date.getMonth()+1}/${date.getDate()}`;
             let transformed: TransformedDataPoint = {
                 imei: d.imei,
@@ -75,7 +80,8 @@ export class App {
         // dimensions
         let dayDimension = ndx.dimension((d: TransformedDataPoint) => d.date);
         let dayImeiDimension = ndx.dimension((d: TransformedDataPoint) => [d.imei, d.date]);
-        let imeiDimension = ndx.dimension((d:TransformedDataPoint) => d.imei);
+        let imeiDimension = ndx.dimension((d:TransformedDataPoint) => d.imei)
+        ;
 
         let signalsCountGroup = dayDimension.group();
         let speedAverageGroup = imeiDimension.group()
@@ -149,7 +155,8 @@ export class App {
             .transitionDuration(500)
             .x(d3.scale.ordinal())
             .xUnits(dc.units.ordinal)
-            .elasticY(true)
+            .elasticX(true)
+            // .elasticY(true)
             .renderHorizontalGridLines(true)
             .renderVerticalGridLines(true)
             .yAxis()

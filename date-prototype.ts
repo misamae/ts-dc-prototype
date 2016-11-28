@@ -14,8 +14,8 @@ export class DatePrototype {
         let irDate = $('#irDate');
         let enGBDate = $('#enGBDate');
 
-
         let date = new Date(1478594887000);
+        // let date = new Date();
         el.html(date.toDateString());
         isoElement.html(date.toISOString());
         localElement.html(date.toLocaleDateString());

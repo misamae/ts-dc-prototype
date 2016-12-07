@@ -15,6 +15,9 @@ System.config({
     "d3": "npm:d3@3.5.17",
     "dc": "npm:dc@2.0.0-beta.32",
     "jquery": "npm:jquery@3.1.1",
+    "moment": "npm:moment@2.17.0",
+    "moment-jalaali": "npm:moment-jalaali@0.4.0",
+    "moment-timezone": "npm:moment-timezone@0.5.10",
     "typescript": "npm:typescript@1.8.10",
     "github:jspm/nodelibs-assert@0.1.0": {
       "assert": "npm:assert@1.4.1"
@@ -68,6 +71,14 @@ System.config({
       "util": "github:jspm/nodelibs-util@0.1.0"
     },
     "npm:isarray@1.0.0": {
+      "systemjs-json": "github:systemjs/plugin-json@0.1.2"
+    },
+    "npm:moment-jalaali@0.4.0": {
+      "jalaali-js": "npm:jalaali-js@0.2.0",
+      "moment": "npm:moment@2.17.0"
+    },
+    "npm:moment-timezone@0.5.10": {
+      "moment": "npm:moment@2.17.0",
       "systemjs-json": "github:systemjs/plugin-json@0.1.2"
     },
     "npm:os-browserify@0.1.2": {

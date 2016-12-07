@@ -1,29 +1,24 @@
 /**
  * Created by meisam on 26/11/2016.
  */
-
-import * as $ from 'jquery';
-import * as moment from 'moment';
+"use strict";
+var $ = require('jquery');
+var moment = require('moment');
 // import 'moment/locale/fa';
-
-import momentj = require('moment-jalaali');
-
-export class DatePrototype {
-
-    constructor() {
+var momentj = require('moment-jalaali');
+var DatePrototype = (function () {
+    function DatePrototype() {
         console.log(moment);
-
         console.log('started?');
-        let timestampEl = $('#timestampSample');
-        let el = $('#simpleDate');
-        let isoElement = $('#isoDate');
-        let localElement = $('#localeDate');
-        let irDate = $('#irDate');
-        let enGBDate = $('#enGBDate');
-        let momentDateEl = $('#momentDate');
-        let momentJalaaliEl = $('#momentJallali');
-
-        let date = new Date(1478594887000);
+        var timestampEl = $('#timestampSample');
+        var el = $('#simpleDate');
+        var isoElement = $('#isoDate');
+        var localElement = $('#localeDate');
+        var irDate = $('#irDate');
+        var enGBDate = $('#enGBDate');
+        var momentDateEl = $('#momentDate');
+        var momentJalaaliEl = $('#momentJallali');
+        var date = new Date(1478594887000);
         // let date = new Date();
         timestampEl.html(date.getTime().toString());
         el.html(date.toDateString());
@@ -31,10 +26,8 @@ export class DatePrototype {
         localElement.html(date.toLocaleDateString());
         enGBDate.html(date.toLocaleDateString('en-GB'));
         irDate.html(date.toLocaleDateString('fa-IR') + date.toLocaleTimeString('fa-IR'));
-
         momentDateEl.html(moment(date).format('LLLL'));
         momentJalaaliEl.html(momentj(date).format('jYYYY/jM/jD'));
-
         //Type: language
         // Subtag: ira
         // Description: Iranian languages
@@ -45,13 +38,11 @@ export class DatePrototype {
         //<currencyCodes type="IRR" numeric="364"/>
         // irDate.html(date.toLocaleDateString('persian'));
         // console.log(new Intl.DateTimeFormat('fa-IR').resolvedOptions());
-
         // let m = momentj('1360/5/26', 'jYYYY/jM/jD');
         // let m = momentj('2016/12/7', 'YYYY/M/D');
-        let m = momentj(date);
+        var m = momentj(date);
         console.log(m.format('jYYYY/jM/jD [is] YYYY/M/D')); // 1360/5/26 is 1981/8/17
-
-        console.log(`year ${m.jYear()}`);
+        console.log("year " + m.jYear());
         // m.jYear() // 1360
         // m.jMonth() // 4
         // m.jDate() // 26
@@ -80,7 +71,8 @@ export class DatePrototype {
         // moment('1392/12/30', 'jYYYY/jMM/jDD').isValid() // false (common year)
         // moment.jIsLeapYear(1391) // true
     }
-
-}
-
-let app = new DatePrototype();
+    return DatePrototype;
+}());
+exports.DatePrototype = DatePrototype;
+var app = new DatePrototype();
+//# sourceMappingURL=date-prototype.js.map

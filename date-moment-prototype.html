@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>date prototype</title>
+</head>
+<body>
+
+<div>
+    <a href="index.html">index</a>
+</div>
+
+<h1>this is our date prototype</h1>
+
+
+<table>
+    <thead>
+    <tr>
+        <th>description</th>
+        <th>value</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>timestamp</td>
+        <td id="timestampSample"></td>
+    </tr>
+    <tr>
+        <td>simple date</td>
+        <td id="simpleDate"></td>
+    </tr>
+    <tr>
+        <td>iso Date</td>
+        <td id="isoDate"></td>
+    </tr>
+    <tr>
+        <td>browser locale</td>
+        <td id="localeDate"></td>
+    </tr>
+    <tr>
+        <td>en-GB</td>
+        <td id="enGBDate"></td>
+    </tr>
+    <tr>
+        <td>ir-fa</td>
+        <td id="irDate"></td>
+    </tr>
+    <tr>
+        <td>moment</td>
+        <td id="momentDate"></td>
+    </tr>
+    <tr>
+        <td>moment jalaali</td>
+        <td id="momentJallali"></td>
+    </tr>
+    </tbody>
+</table>
+
+<script src="jspm_packages/system.js"></script>
+<script src="config.js"></script>
+<script>
+    System.import('date-prototype');
+</script>
+</body>
+
+</html>

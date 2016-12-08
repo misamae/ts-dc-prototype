@@ -2,6 +2,8 @@
 import * as d3 from 'd3';
 import * as crossfilter from 'crossfilter';
 import * as dc from 'dc';
+import momentj = require('moment-jalaali');
+
 
 export interface Truck {
     _id: string;
@@ -65,6 +67,7 @@ interface TransformedGPSTrackerCoordinate {
     geoCoordinate: GeoCoordinate;
     speed: number;
     bearing: number;
+    irDate: Date;
 }
 
 /***
@@ -95,6 +98,11 @@ export class TrucksApp {
 
             app.getSpeeds();
         })
+    }
+
+    transformDate(d: Date) {
+        let m = momentj(d);
+        return new Date(m.jYear(), m.jMonth(), m.jDate(), 0, 0);
     }
 
     redraw() {
@@ -191,18 +199,18 @@ export class TrucksApp {
         });
 
         let irLocale = d3.locale({
-            "decimal": ".",
-            "thousands": ",",
-            "grouping": [3],
-            "currency": ["", "ریال"],
-            "dateTime": "%A, %e %B %Y г. %X",
-            "date": "%d.%m.%Y",
-            "time": "%H:%M:%S",
-            "periods": ["AM", "PM"],
-            "days": ["یکشنبه", "دوشنبه", "سه شنبه", "جهارشنبه", "پنحشنبه", "جمعه", "شنبه"],
-            "shortDays": ["یکشنبه", "دوشنبه", "سه شنبه", "جهارشنبه", "پنحشنبه", "جمعه", "شنبه"],
-            "months": ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"],
-            "shortMonths": ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"]
+            decimal: '.',
+            thousands: ',',
+            grouping: [3],
+            currency: ['ریال', ''],
+            dateTime: '',
+            date: '',
+            months: ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"],
+            days: ["یکشنبه", "دوشنبه", "سه شنبه", "جهارشنبه", "پنحشنبه", "جمعه", "شنبه"],
+            periods: ['صبح', 'ظهر'],
+            shortDays: ["شنبه", "یکشنبه", "دوشنبه", "سه شنبه", "جهارشنبه", "پنحشنبه", "جمعه"],
+            shortMonths: ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"],
+            time: ''
         });
 
         let transformed: TransformedGPSTrackerCoordinate[] = data.map(d => {
@@ -213,7 +221,8 @@ export class TrucksApp {
                 time: new Date(dt.getFullYear(), dt.getMonth() + 1, dt.getDate(), dt.getHours()),
                 geoCoordinate: d.geoCoordinate,
                 speed: d.speed,
-                bearing: d.bearing
+                bearing: d.bearing,
+                irDate: this.transformDate(dt)
             };
         });
 

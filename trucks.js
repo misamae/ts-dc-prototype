@@ -2,6 +2,7 @@
 var d3 = require('d3');
 var crossfilter = require('crossfilter');
 var dc = require('dc');
+var momentj = require('moment-jalaali');
 /***
  * prototype to do a simple dashboard
  * bar chart points per day => DONE
@@ -27,6 +28,10 @@ var TrucksApp = (function () {
             app.getSpeeds();
         });
     }
+    TrucksApp.prototype.transformDate = function (d) {
+        var m = momentj(d);
+        return new Date(m.jYear(), m.jMonth(), m.jDate(), 0, 0);
+    };
     TrucksApp.prototype.redraw = function () {
         d3.json('data/trucks.json', this.callback);
     };
@@ -73,6 +78,7 @@ var TrucksApp = (function () {
     };
     TrucksApp.prototype.getSpeeds = function () { d3.json('data/speeds.json', this.drawSpeedChart); };
     TrucksApp.prototype.drawSpeedChart = function (data) {
+        var _this = this;
         var locale = d3.locale({
             "decimal": ",",
             "thousands": "\u00A0",
@@ -88,18 +94,18 @@ var TrucksApp = (function () {
             "shortMonths": ["янв", "фев", "мар", "апр", "май", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"]
         });
         var irLocale = d3.locale({
-            "decimal": ".",
-            "thousands": ",",
-            "grouping": [3],
-            "currency": ["", "ریال"],
-            "dateTime": "%A, %e %B %Y г. %X",
-            "date": "%d.%m.%Y",
-            "time": "%H:%M:%S",
-            "periods": ["AM", "PM"],
-            "days": ["یکشنبه", "دوشنبه", "سه شنبه", "جهارشنبه", "پنحشنبه", "جمعه", "شنبه"],
-            "shortDays": ["یکشنبه", "دوشنبه", "سه شنبه", "جهارشنبه", "پنحشنبه", "جمعه", "شنبه"],
-            "months": ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"],
-            "shortMonths": ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"]
+            decimal: '.',
+            thousands: ',',
+            grouping: [3],
+            currency: ['ریال', ''],
+            dateTime: '',
+            date: '',
+            months: ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"],
+            days: ["یکشنبه", "دوشنبه", "سه شنبه", "جهارشنبه", "پنحشنبه", "جمعه", "شنبه"],
+            periods: ['صبح', 'ظهر'],
+            shortDays: ["شنبه", "یکشنبه", "دوشنبه", "سه شنبه", "جهارشنبه", "پنحشنبه", "جمعه"],
+            shortMonths: ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"],
+            time: ''
         });
         var transformed = data.map(function (d) {
             var dt = new Date(d.timestamp);
@@ -109,7 +115,8 @@ var TrucksApp = (function () {
                 time: new Date(dt.getFullYear(), dt.getMonth() + 1, dt.getDate(), dt.getHours()),
                 geoCoordinate: d.geoCoordinate,
                 speed: d.speed,
-                bearing: d.bearing
+                bearing: d.bearing,
+                irDate: _this.transformDate(dt)
             };
         });
         var ndx = crossfilter(transformed);

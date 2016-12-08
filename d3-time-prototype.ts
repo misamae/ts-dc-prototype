@@ -2,10 +2,17 @@
 import * as d3 from 'd3';
 import * as $ from 'jquery';
 
+import * as moment from 'moment';
+// import 'moment/locale/fa';
+
+import momentj = require('moment-jalaali');
+
+
 export class D3TimePrototype {
     constructor() {
         console.log('initialised d3 time prototype');
         let d = new Date();
+        // let d = new Date(1478594887000);
 
         let timestampEl = $('#timestampSample');
         timestampEl.html(d.getTime().toString());
@@ -36,8 +43,50 @@ export class D3TimePrototype {
             ["%Y", function() { return true; }]
         ]);
 
+        // console.log(multiFormatter(d));
 
-        console.log(multiFormatter(d));
+        let months = ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"];
+        let days = ["یکشنبه", "دوشنبه", "سه شنبه", "جهارشنبه", "پنحشنبه", "جمعه", "شنبه"];
+
+        console.log(days);
+        console.log(months);
+
+        // for(let m of months) {
+        //     console.log(m);
+        // }
+
+        let newLocale = d3.locale({
+            decimal: '.',
+            thousands: ',',
+            grouping: [3],
+            currency: ['ریال', ''],
+            dateTime: '',
+            date: '',
+            months: ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"],
+            days: ["یکشنبه", "دوشنبه", "سه شنبه", "جهارشنبه", "پنحشنبه", "جمعه", "شنبه"],
+            periods: ['صبح', 'ظهر'],
+            shortDays: ["شنبه", "یکشنبه", "دوشنبه", "سه شنبه", "جهارشنبه", "پنحشنبه", "جمعه"],
+            shortMonths: ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"],
+            time: ''
+        });
+
+        // let d1 = new Date(1358, 0, 1, 0, 0);
+        let d1 = this.transformDate(d);
+
+        let dayOfWeekLocale = $('#d3DayOfWeekLocale');
+        dayOfWeekLocale.html(newLocale.timeFormat('%a')(d1));
+
+        let monthNameLocale = $('#d3MonthNameLocale');
+        monthNameLocale.html(newLocale.timeFormat('%B')(d1));
+
+        let dayOfMonthLocale = $('#d3DayOfMonthLocale');
+        dayOfMonthLocale.html(newLocale.timeFormat('%d')(d1));
+
+    }
+
+    transformDate(d: Date) {
+        let m = momentj(d);
+        return new Date(m.jYear(), m.jMonth(), m.jDate(), 0, 0);
     }
 }
 

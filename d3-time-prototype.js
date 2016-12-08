@@ -1,10 +1,13 @@
 "use strict";
 var d3 = require('d3');
 var $ = require('jquery');
+// import 'moment/locale/fa';
+var momentj = require('moment-jalaali');
 var D3TimePrototype = (function () {
     function D3TimePrototype() {
         console.log('initialised d3 time prototype');
         var d = new Date();
+        // let d = new Date(1478594887000);
         var timestampEl = $('#timestampSample');
         timestampEl.html(d.getTime().toString());
         var dayOfWeekEl = $('#dayOfWeek');
@@ -28,8 +31,41 @@ var D3TimePrototype = (function () {
             ["%B", function (d) { return d.getMonth(); }],
             ["%Y", function () { return true; }]
         ]);
-        console.log(multiFormatter(d));
+        // console.log(multiFormatter(d));
+        var months = ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"];
+        var days = ["یکشنبه", "دوشنبه", "سه شنبه", "جهارشنبه", "پنحشنبه", "جمعه", "شنبه"];
+        console.log(days);
+        console.log(months);
+        // for(let m of months) {
+        //     console.log(m);
+        // }
+        var newLocale = d3.locale({
+            decimal: '.',
+            thousands: ',',
+            grouping: [3],
+            currency: ['ریال', ''],
+            dateTime: '',
+            date: '',
+            months: ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"],
+            days: ["یکشنبه", "دوشنبه", "سه شنبه", "جهارشنبه", "پنحشنبه", "جمعه", "شنبه"],
+            periods: ['صبح', 'ظهر'],
+            shortDays: ["شنبه", "یکشنبه", "دوشنبه", "سه شنبه", "جهارشنبه", "پنحشنبه", "جمعه"],
+            shortMonths: ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"],
+            time: ''
+        });
+        // let d1 = new Date(1358, 0, 1, 0, 0);
+        var d1 = this.transformDate(d);
+        var dayOfWeekLocale = $('#d3DayOfWeekLocale');
+        dayOfWeekLocale.html(newLocale.timeFormat('%a')(d1));
+        var monthNameLocale = $('#d3MonthNameLocale');
+        monthNameLocale.html(newLocale.timeFormat('%B')(d1));
+        var dayOfMonthLocale = $('#d3DayOfMonthLocale');
+        dayOfMonthLocale.html(newLocale.timeFormat('%d')(d1));
     }
+    D3TimePrototype.prototype.transformDate = function (d) {
+        var m = momentj(d);
+        return new Date(m.jYear(), m.jMonth(), m.jDate(), 0, 0);
+    };
     return D3TimePrototype;
 }());
 exports.D3TimePrototype = D3TimePrototype;

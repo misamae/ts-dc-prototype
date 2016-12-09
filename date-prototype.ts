@@ -3,10 +3,12 @@
  */
 
 import * as $ from 'jquery';
-import * as moment from 'moment';
-// import 'moment/locale/fa';
+// import * as moment from 'moment';
+// import * as tz from 'moment-timezone';
+import * as moment from 'moment-timezone';
 
 import momentj = require('moment-jalaali');
+// import tz = require('moment-timezone');
 
 export class DatePrototype {
 
@@ -23,8 +25,8 @@ export class DatePrototype {
         let momentDateEl = $('#momentDate');
         let momentJalaaliEl = $('#momentJallali');
 
-        let date = new Date(1478594887000);
-        // let date = new Date();
+        // let date = new Date(1478594887000);
+        let date = new Date();
         timestampEl.html(date.getTime().toString());
         el.html(date.toDateString());
         isoElement.html(date.toISOString());
@@ -53,35 +55,38 @@ export class DatePrototype {
         console.log(m);
 
         console.log(`year ${m.jYear()}`);
-        // m.jYear() // 1360
-        // m.jMonth() // 4
-        // m.jDate() // 26
-        // m.jDayOfYear() // 150
-        // m.jWeek() // 22
-        // m.jWeekYear() // 1360
-        //
-        // m.add(1, 'jYear')
-        // m.add(2, 'jMonth')
-        // m.add(3, 'day')
-        // m.format('jYYYY/jM/jD') // 1361/7/29
-        //
-        // m.jMonth(11)
-        // m.startOf('jMonth')
-        // m.format('jYYYY/jM/jD') // 1361/12/1
-        //
-        // m.jYear(1392)
-        // m.startOf('jYear')
-        // m.format('jYYYY/jM/jD') // 1392/1/1
-        //
-        // m.subtract(1, 'jYear')
-        // m.subtract(1, 'jMonth')
-        // m.format('jYYYY/jM/jD') // 1390/12/1
-        //
-        // moment('1391/12/30', 'jYYYY/jMM/jDD').isValid() // true (leap year)
-        // moment('1392/12/30', 'jYYYY/jMM/jDD').isValid() // false (common year)
-        // moment.jIsLeapYear(1391) // true
+        console.log(date.toLocaleDateString('fa-IR'));
+        this.transformDate(date);
+
+        console.log(moment(date).tz("America/Los_Angeles").format());
+        console.log(moment(date).tz("Asia/Tehran").format());
+
+        let momentTimezoneEl = $('#momentTimezone');
+        momentTimezoneEl.html(moment(date).tz("Asia/Tehran").format());
+
+        console.log('last line');
     }
 
+
+    transformDate(d: Date) {
+        let dt1String = d.toLocaleDateString('fa-IR');
+        console.log(dt1String);
+        let yearString = dt1String.slice(0, 4);
+        console.log(yearString);
+
+        console.log(+"1395");
+
+        // console.log(momentj.toJalaali(d));
+
+        // let jun = moment("2014-06-01T12:00:00Z");
+
+        // console.log(jun.tz('America/Los_Angeles').format('ha z'));  // 5am PDT
+        // dec.tz('America/Los_Angeles').format('ha z');  // 4am PST
+        //
+        // jun.tz('America/New_York').format('ha z');     // 8am EDT
+        // dec.tz('America/New_York').format('ha z');     // 7am EST
+
+    }
 }
 
 let app = new DatePrototype();

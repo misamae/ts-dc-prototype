@@ -8,14 +8,13 @@ System.config({
   },
 
   map: {
-    "@types/jquery": "npm:@types/jquery@2.0.34",
     "bootstrap": "github:twbs/bootstrap@3.3.7",
     "crossfilter": "npm:crossfilter@1.3.12",
     "crossfilter2": "npm:crossfilter2@1.3.14",
     "d3": "npm:d3@3.5.17",
     "dc": "npm:dc@2.0.0-beta.32",
     "jquery": "npm:jquery@3.1.1",
-    "moment": "npm:moment@2.17.0",
+    "moment": "npm:moment@2.17.1",
     "moment-jalaali": "npm:moment-jalaali@0.4.0",
     "moment-timezone": "npm:moment-timezone@0.5.10",
     "typescript": "npm:typescript@1.8.10",
@@ -39,6 +38,9 @@ System.config({
     },
     "github:twbs/bootstrap@3.3.7": {
       "jquery": "npm:jquery@3.1.1"
+    },
+    "npm:@types/moment-timezone@0.2.32": {
+      "moment": "npm:moment@2.17.1"
     },
     "npm:assert@1.4.1": {
       "assert": "github:jspm/nodelibs-assert@0.1.0",
@@ -75,10 +77,10 @@ System.config({
     },
     "npm:moment-jalaali@0.4.0": {
       "jalaali-js": "npm:jalaali-js@0.2.0",
-      "moment": "npm:moment@2.17.0"
+      "moment": "npm:moment@2.17.1"
     },
     "npm:moment-timezone@0.5.10": {
-      "moment": "npm:moment@2.17.0",
+      "moment": "npm:moment@2.17.1",
       "systemjs-json": "github:systemjs/plugin-json@0.1.2"
     },
     "npm:os-browserify@0.1.2": {

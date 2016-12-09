@@ -100,11 +100,6 @@ export class TrucksApp {
         })
     }
 
-    transformDate(d: Date) {
-        let m = momentj(d);
-        return new Date(m.jYear(), m.jMonth(), m.jDate(), 0, 0);
-    }
-
     redraw() {
         d3.json('data/trucks.json', this.callback);
     }
@@ -214,15 +209,19 @@ export class TrucksApp {
         });
 
         let transformed: TransformedGPSTrackerCoordinate[] = data.map(d => {
+
             let dt = new Date(d.timestamp);
+            // let m = momentj(d);
+            // let dt1 = new Date(m.jYear(), m.jMonth(), m.jDate(), 0, 0);
+
             return {
                 imei: d.imei,
                 timestamp: d.timestamp,
-                time: new Date(dt.getFullYear(), dt.getMonth() + 1, dt.getDate(), dt.getHours()),
+                time: new Date(dt.getFullYear(), dt.getMonth(), dt.getDate(), dt.getHours(), dt.getMinutes()),
                 geoCoordinate: d.geoCoordinate,
                 speed: d.speed,
                 bearing: d.bearing,
-                irDate: this.transformDate(dt)
+                irDate: dt
             };
         });
 
@@ -250,8 +249,7 @@ export class TrucksApp {
         let maxDate = timeDimension.top(1)[0].time;
 
         let chart = dc.lineChart('#speed-line');
-        // d3.format = this.locale.timeFormat
-        var tickFormat = locale.timeFormat.multi([
+        let tickFormat = irLocale.timeFormat.multi([
             ["%H:%M", function(d) { return d.getMinutes(); }],
             ["%H:%M", function(d) { return d.getHours(); }],
             ["%a %d", function(d) { return d.getDay() && d.getDate() != 1; }],
@@ -272,7 +270,9 @@ export class TrucksApp {
             .orient("bottom")
             .ticks(5)
             .tickPadding(8)
-            .tickFormat(locale.timeFormat("%B"));
+            .tickFormat(tickFormat);
+            // .tickFormat(irLocale.timeFormat("%B"));
+            // .tickFormat(d3.time.format("%B"));
 
         chart
             .x(d3.time.scale().domain([minDate, maxDate]))

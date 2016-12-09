@@ -95,6 +95,7 @@ export class D3TimePrototype {
         let timezone = moment(d).tz('Asia/Tehran');
         console.log(timezone.format());
         console.log(timezone.hour());
+        console.log(timezone.minute());
         console.log(timezone.minutes());
         return new Date(m.jYear(), m.jMonth(), m.jDate(), timezone.hour(), timezone.minutes());
     }

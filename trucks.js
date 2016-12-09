@@ -3,7 +3,7 @@ var d3 = require('d3');
 var crossfilter = require('crossfilter');
 var dc = require('dc');
 var moment = require('moment-timezone');
-var momentj = require('moment-jalaali');
+var momentJ = require('moment-jalaali');
 /***
  * prototype to do a simple dashboard
  * bar chart points per day => DONE
@@ -103,10 +103,26 @@ var TrucksApp = (function () {
             shortMonths: ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"],
             time: ''
         });
+        var transformedLimited = data.slice(0, 10).map(function (d) {
+            var dt = new Date(d.timestamp);
+            var m = momentJ(dt);
+            var timezone = moment(dt).tz('Asia/Tehran');
+            var dt1 = new Date(m.jYear(), m.jMonth(), m.jDate(), timezone.hour(), timezone.minute());
+            console.log("date: " + dt + " & irDate: " + dt1);
+            return {
+                imei: d.imei,
+                timestamp: d.timestamp,
+                time: new Date(dt.getFullYear(), dt.getMonth(), dt.getDate(), dt.getHours(), dt.getMinutes()),
+                geoCoordinate: d.geoCoordinate,
+                speed: d.speed,
+                bearing: d.bearing,
+                irDate: dt1
+            };
+        });
         var transformed = data.map(function (d) {
             var dt = new Date(d.timestamp);
-            var m = momentj(d);
-            var timezone = moment(d).tz('Asia/Tehran');
+            var m = momentJ(dt);
+            var timezone = moment(dt).tz('Asia/Tehran');
             var dt1 = new Date(m.jYear(), m.jMonth(), m.jDate(), timezone.hour(), timezone.minutes());
             return {
                 imei: d.imei,
@@ -119,7 +135,7 @@ var TrucksApp = (function () {
             };
         });
         var ndx = crossfilter(transformed);
-        var timeDimension = ndx.dimension(function (d) { return d.time; });
+        var timeDimension = ndx.dimension(function (d) { return d.irDate; });
         var speedGroup = timeDimension.group()
             .reduce(function (p, v) {
             ++p.number;
@@ -135,8 +151,9 @@ var TrucksApp = (function () {
             return { number: 0, total: 0, avg: 0 };
         });
         console.log(speedGroup.top(10));
-        var minDate = timeDimension.bottom(1)[0].time;
-        var maxDate = timeDimension.top(1)[0].time;
+        var minDate = timeDimension.bottom(1)[0].irDate;
+        var maxDate = timeDimension.top(1)[0].irDate;
+        console.log("minDate: " + minDate + " & maxDate: " + maxDate);
         var chart = dc.lineChart('#speed-line');
         var tickFormat = irLocale.timeFormat.multi([
             ["%H:%M", function (d) { return d.getMinutes(); }],

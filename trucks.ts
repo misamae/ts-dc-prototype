@@ -3,7 +3,7 @@ import * as d3 from 'd3';
 import * as crossfilter from 'crossfilter';
 import * as dc from 'dc';
 import moment = require('moment-timezone');
-import momentj = require('moment-jalaali');
+import momentJ = require('moment-jalaali');
 
 
 export interface Truck {
@@ -209,10 +209,30 @@ export class TrucksApp {
             time: ''
         });
 
+        let transformedLimited: TransformedGPSTrackerCoordinate[] = data.slice(0, 10).map(d => {
+            let dt = new Date(d.timestamp);
+            let m = momentJ(dt);
+            let timezone = moment(dt).tz('Asia/Tehran');
+
+            let dt1 = new Date(m.jYear(), m.jMonth(), m.jDate(), timezone.hour(), timezone.minute());
+
+            console.log(`date: ${dt} & irDate: ${dt1}`);
+
+            return {
+                imei: d.imei,
+                timestamp: d.timestamp,
+                time: new Date(dt.getFullYear(), dt.getMonth(), dt.getDate(), dt.getHours(), dt.getMinutes()),
+                geoCoordinate: d.geoCoordinate,
+                speed: d.speed,
+                bearing: d.bearing,
+                irDate: dt1
+            };
+        });
+
         let transformed: TransformedGPSTrackerCoordinate[] = data.map(d => {
             let dt = new Date(d.timestamp);
-            let m = momentj(d);
-            let timezone = moment(d).tz('Asia/Tehran');
+            let m = momentJ(dt);
+            let timezone = moment(dt).tz('Asia/Tehran');
 
             let dt1 = new Date(m.jYear(), m.jMonth(), m.jDate(), timezone.hour(), timezone.minutes());
 
@@ -228,7 +248,7 @@ export class TrucksApp {
         });
 
         let ndx = crossfilter(transformed);
-        let timeDimension = ndx.dimension((d: TransformedGPSTrackerCoordinate) => d.time);
+        let timeDimension = ndx.dimension((d: TransformedGPSTrackerCoordinate) => d.irDate);
         let speedGroup = timeDimension.group()
             .reduce((p: GroupKey, v: GPSTrackerCoordinate) => {
                 ++p.number;
@@ -247,8 +267,10 @@ export class TrucksApp {
 
         console.log(speedGroup.top(10));
 
-        let minDate = timeDimension.bottom(1)[0].time;
-        let maxDate = timeDimension.top(1)[0].time;
+        let minDate = timeDimension.bottom(1)[0].irDate;
+        let maxDate = timeDimension.top(1)[0].irDate;
+
+        console.log(`minDate: ${minDate} & maxDate: ${maxDate}`);
 
         let chart = dc.lineChart('#speed-line');
         let tickFormat = irLocale.timeFormat.multi([

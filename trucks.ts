@@ -2,6 +2,7 @@
 import * as d3 from 'd3';
 import * as crossfilter from 'crossfilter';
 import * as dc from 'dc';
+import moment = require('moment-timezone');
 import momentj = require('moment-jalaali');
 
 
@@ -209,10 +210,11 @@ export class TrucksApp {
         });
 
         let transformed: TransformedGPSTrackerCoordinate[] = data.map(d => {
-
             let dt = new Date(d.timestamp);
-            // let m = momentj(d);
-            // let dt1 = new Date(m.jYear(), m.jMonth(), m.jDate(), 0, 0);
+            let m = momentj(d);
+            let timezone = moment(d).tz('Asia/Tehran');
+
+            let dt1 = new Date(m.jYear(), m.jMonth(), m.jDate(), timezone.hour(), timezone.minutes());
 
             return {
                 imei: d.imei,
@@ -221,7 +223,7 @@ export class TrucksApp {
                 geoCoordinate: d.geoCoordinate,
                 speed: d.speed,
                 bearing: d.bearing,
-                irDate: dt
+                irDate: dt1
             };
         });
 

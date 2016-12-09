@@ -2,7 +2,7 @@
 import * as d3 from 'd3';
 import * as $ from 'jquery';
 
-import * as moment from 'moment';
+import * as moment from 'moment-timezone';
 // import 'moment/locale/fa';
 
 import momentj = require('moment-jalaali');
@@ -82,11 +82,21 @@ export class D3TimePrototype {
         let dayOfMonthLocale = $('#d3DayOfMonthLocale');
         dayOfMonthLocale.html(newLocale.timeFormat('%d')(d1));
 
+        let hourWithTimezone = $('#d3HourWithTimezone');
+        hourWithTimezone.html(newLocale.timeFormat('%H')(d1));
+
+        let minuteWithTimezone = $('#d3MinuteWithTimezone');
+        minuteWithTimezone.html(newLocale.timeFormat('%M')(d1));
+
     }
 
     transformDate(d: Date) {
         let m = momentj(d);
-        return new Date(m.jYear(), m.jMonth(), m.jDate(), 0, 0);
+        let timezone = moment(d).tz('Asia/Tehran');
+        console.log(timezone.format());
+        console.log(timezone.hour());
+        console.log(timezone.minutes());
+        return new Date(m.jYear(), m.jMonth(), m.jDate(), timezone.hour(), timezone.minutes());
     }
 }
 

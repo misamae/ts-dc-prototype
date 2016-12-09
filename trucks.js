@@ -2,6 +2,8 @@
 var d3 = require('d3');
 var crossfilter = require('crossfilter');
 var dc = require('dc');
+var moment = require('moment-timezone');
+var momentj = require('moment-jalaali');
 /***
  * prototype to do a simple dashboard
  * bar chart points per day => DONE
@@ -103,8 +105,9 @@ var TrucksApp = (function () {
         });
         var transformed = data.map(function (d) {
             var dt = new Date(d.timestamp);
-            // let m = momentj(d);
-            // let dt1 = new Date(m.jYear(), m.jMonth(), m.jDate(), 0, 0);
+            var m = momentj(d);
+            var timezone = moment(d).tz('Asia/Tehran');
+            var dt1 = new Date(m.jYear(), m.jMonth(), m.jDate(), timezone.hour(), timezone.minutes());
             return {
                 imei: d.imei,
                 timestamp: d.timestamp,
@@ -112,7 +115,7 @@ var TrucksApp = (function () {
                 geoCoordinate: d.geoCoordinate,
                 speed: d.speed,
                 bearing: d.bearing,
-                irDate: dt
+                irDate: dt1
             };
         });
         var ndx = crossfilter(transformed);

@@ -1,6 +1,7 @@
 "use strict";
 var d3 = require('d3');
 var $ = require('jquery');
+var moment = require('moment-timezone');
 // import 'moment/locale/fa';
 var momentj = require('moment-jalaali');
 var D3TimePrototype = (function () {
@@ -61,10 +62,18 @@ var D3TimePrototype = (function () {
         monthNameLocale.html(newLocale.timeFormat('%B')(d1));
         var dayOfMonthLocale = $('#d3DayOfMonthLocale');
         dayOfMonthLocale.html(newLocale.timeFormat('%d')(d1));
+        var hourWithTimezone = $('#d3HourWithTimezone');
+        hourWithTimezone.html(newLocale.timeFormat('%H')(d1));
+        var minuteWithTimezone = $('#d3MinuteWithTimezone');
+        minuteWithTimezone.html(newLocale.timeFormat('%M')(d1));
     }
     D3TimePrototype.prototype.transformDate = function (d) {
         var m = momentj(d);
-        return new Date(m.jYear(), m.jMonth(), m.jDate(), 0, 0);
+        var timezone = moment(d).tz('Asia/Tehran');
+        console.log(timezone.format());
+        console.log(timezone.hour());
+        console.log(timezone.minutes());
+        return new Date(m.jYear(), m.jMonth(), m.jDate(), timezone.hour(), timezone.minutes());
     };
     return D3TimePrototype;
 }());

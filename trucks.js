@@ -75,20 +75,6 @@ var TrucksApp = (function () {
     };
     TrucksApp.prototype.getSpeeds = function () { d3.json('data/speeds.json', this.drawSpeedChart); };
     TrucksApp.prototype.drawSpeedChart = function (data) {
-        var locale = d3.locale({
-            "decimal": ",",
-            "thousands": "\u00A0",
-            "grouping": [3],
-            "currency": ["", " руб."],
-            "dateTime": "%A, %e %B %Y г. %X",
-            "date": "%d.%m.%Y",
-            "time": "%H:%M:%S",
-            "periods": ["AM", "PM"],
-            "days": ["воскресенье", "понедельник", "вторник", "среда", "четверг", "пятница", "суббота"],
-            "shortDays": ["вс", "пн", "вт", "ср", "чт", "пт", "сб"],
-            "months": ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"],
-            "shortMonths": ["янв", "фев", "мар", "апр", "май", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"]
-        });
         var irLocale = d3.locale({
             decimal: '.',
             thousands: ',',
@@ -103,27 +89,11 @@ var TrucksApp = (function () {
             shortMonths: ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"],
             time: ''
         });
-        var transformedLimited = data.slice(0, 10).map(function (d) {
-            var dt = new Date(d.timestamp);
-            var m = momentJ(dt);
-            var timezone = moment(dt).tz('Asia/Tehran');
-            var dt1 = new Date(m.jYear(), m.jMonth(), m.jDate(), timezone.hour(), timezone.minute());
-            console.log("date: " + dt + " & irDate: " + dt1);
-            return {
-                imei: d.imei,
-                timestamp: d.timestamp,
-                time: new Date(dt.getFullYear(), dt.getMonth(), dt.getDate(), dt.getHours(), dt.getMinutes()),
-                geoCoordinate: d.geoCoordinate,
-                speed: d.speed,
-                bearing: d.bearing,
-                irDate: dt1
-            };
-        });
         var transformed = data.map(function (d) {
             var dt = new Date(d.timestamp);
             var m = momentJ(dt);
-            var timezone = moment(dt).tz('Asia/Tehran');
-            var dt1 = new Date(m.jYear(), m.jMonth(), m.jDate(), timezone.hour(), timezone.minutes());
+            var timeElement = moment(dt).tz('Asia/Tehran');
+            var dt1 = new Date(m.jYear(), m.jMonth(), m.jDate(), timeElement.hour(), timeElement.minutes());
             return {
                 imei: d.imei,
                 timestamp: d.timestamp,
@@ -150,7 +120,6 @@ var TrucksApp = (function () {
         }, function () {
             return { number: 0, total: 0, avg: 0 };
         });
-        console.log(speedGroup.top(10));
         var minDate = timeDimension.bottom(1)[0].irDate;
         var maxDate = timeDimension.top(1)[0].irDate;
         console.log("minDate: " + minDate + " & maxDate: " + maxDate);

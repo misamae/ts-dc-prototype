@@ -179,21 +179,6 @@ export class TrucksApp {
     getSpeeds () { d3.json('data/speeds.json', this.drawSpeedChart); }
 
     drawSpeedChart(data: GPSTrackerCoordinate[]) {
-        let locale = d3.locale({
-            "decimal": ",",
-            "thousands": "\u00A0",
-            "grouping": [3],
-            "currency": ["", " руб."],
-            "dateTime": "%A, %e %B %Y г. %X",
-            "date": "%d.%m.%Y",
-            "time": "%H:%M:%S",
-            "periods": ["AM", "PM"],
-            "days": ["воскресенье", "понедельник", "вторник", "среда", "четверг", "пятница", "суббота"],
-            "shortDays": ["вс", "пн", "вт", "ср", "чт", "пт", "сб"],
-            "months": ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"],
-            "shortMonths": ["янв", "фев", "мар", "апр", "май", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"]
-        });
-
         let irLocale = d3.locale({
             decimal: '.',
             thousands: ',',
@@ -209,32 +194,12 @@ export class TrucksApp {
             time: ''
         });
 
-        let transformedLimited: TransformedGPSTrackerCoordinate[] = data.slice(0, 10).map(d => {
-            let dt = new Date(d.timestamp);
-            let m = momentJ(dt);
-            let timezone = moment(dt).tz('Asia/Tehran');
-
-            let dt1 = new Date(m.jYear(), m.jMonth(), m.jDate(), timezone.hour(), timezone.minute());
-
-            console.log(`date: ${dt} & irDate: ${dt1}`);
-
-            return {
-                imei: d.imei,
-                timestamp: d.timestamp,
-                time: new Date(dt.getFullYear(), dt.getMonth(), dt.getDate(), dt.getHours(), dt.getMinutes()),
-                geoCoordinate: d.geoCoordinate,
-                speed: d.speed,
-                bearing: d.bearing,
-                irDate: dt1
-            };
-        });
-
         let transformed: TransformedGPSTrackerCoordinate[] = data.map(d => {
             let dt = new Date(d.timestamp);
             let m = momentJ(dt);
-            let timezone = moment(dt).tz('Asia/Tehran');
+            let timeElement = moment(dt).tz('Asia/Tehran');
 
-            let dt1 = new Date(m.jYear(), m.jMonth(), m.jDate(), timezone.hour(), timezone.minutes());
+            let dt1 = new Date(m.jYear(), m.jMonth(), m.jDate(), timeElement.hour(), timeElement.minutes());
 
             return {
                 imei: d.imei,
@@ -263,9 +228,6 @@ export class TrucksApp {
             }, function () {
                 return { number: 0, total: 0, avg: 0}
             });
-
-
-        console.log(speedGroup.top(10));
 
         let minDate = timeDimension.bottom(1)[0].irDate;
         let maxDate = timeDimension.top(1)[0].irDate;

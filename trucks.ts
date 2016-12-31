@@ -244,21 +244,13 @@ export class TrucksApp {
             ["%Y", function() { return true; }]
         ]);
 
-        // axis.tickFormat(tickFormat);
-
-        var x = d3.time.scale()
-            .domain([minDate, maxDate])
-            // .range([0, width])
-            ;
-
-        var xAxis = d3.svg.axis()
-            .scale(x)
+        let xAxis = d3.svg.axis()
+            .scale(d3.time.scale().domain([minDate, maxDate]))
             .orient("bottom")
-            .ticks(5)
+            .ticks(20)
             .tickPadding(8)
-            .tickFormat(tickFormat);
-            // .tickFormat(irLocale.timeFormat("%B"));
-            // .tickFormat(d3.time.format("%B"));
+            .tickFormat(tickFormat)
+            ;
 
         chart
             .x(d3.time.scale().domain([minDate, maxDate]))

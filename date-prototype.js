@@ -42,7 +42,7 @@ var DatePrototype = (function () {
         // console.log(new Intl.DateTimeFormat('fa-IR').resolvedOptions());
         // let m = momentj('1360/5/26', 'jYYYY/jM/jD');
         // let m = momentj('2016/12/7', 'YYYY/M/D');
-        var m = momentj(date);
+        var m = momentj(date).tz('Asia/Tehran');
         console.log(m.format('jYYYY/jM/jD [is] YYYY/M/D')); // 1360/5/26 is 1981/8/17
         console.log(m);
         console.log("year " + m.jYear());

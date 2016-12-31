@@ -50,7 +50,7 @@ export class DatePrototype {
 
         // let m = momentj('1360/5/26', 'jYYYY/jM/jD');
         // let m = momentj('2016/12/7', 'YYYY/M/D');
-        let m = momentj(date);
+        let m = momentj(date).tz('Asia/Tehran');
         console.log(m.format('jYYYY/jM/jD [is] YYYY/M/D')); // 1360/5/26 is 1981/8/17
         console.log(m);
 

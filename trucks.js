@@ -4,6 +4,7 @@ var crossfilter = require('crossfilter');
 var dc = require('dc');
 var moment = require('moment-timezone');
 var momentJ = require('moment-jalaali');
+var d3_time_scale_prototype_1 = require('./d3-time-scale-prototype');
 /***
  * prototype to do a simple dashboard
  * bar chart points per day => DONE
@@ -30,7 +31,7 @@ var TrucksApp = (function () {
         });
     }
     TrucksApp.prototype.redraw = function () {
-        d3.json('data/trucks.json', this.callback);
+        // d3.json('data/trucks.json', this.callback);
     };
     TrucksApp.prototype.callback = function (data) {
         var twoHours = 5 * 60 * 60 * 1000;
@@ -73,8 +74,56 @@ var TrucksApp = (function () {
             .legend(dc.legend());
         dc.renderAll();
     };
-    TrucksApp.prototype.getSpeeds = function () { d3.json('data/speeds.json', this.drawSpeedChart); };
+    TrucksApp.prototype.getSpeeds = function () {
+        var _this = this;
+        d3.json('data/speeds.json', function (err, data) {
+            _this.drawSpeedChart(data);
+            // this.drawSpeedChartOld(data);
+        });
+    };
     TrucksApp.prototype.drawSpeedChart = function (data) {
+        data = data.slice(10, 40);
+        var ndx = crossfilter(data);
+        var timeDimension = ndx.dimension(function (d) { return d.timestamp; });
+        var speedGroup = timeDimension.group()
+            .reduce(function (p, v) {
+            ++p.number;
+            p.total += +v.speed;
+            p.avg = Math.round(p.total / p.number);
+            return p;
+        }, function (p, v) {
+            --p.number;
+            p.total -= +v.speed;
+            p.avg = (p.number == 0) ? 0 : Math.round(p.total / p.number);
+            return p;
+        }, function () {
+            return { number: 0, total: 0, avg: 0 };
+        });
+        var minDate = timeDimension.bottom(1)[0].timestamp;
+        var maxDate = timeDimension.top(1)[0].timestamp;
+        console.log("minDate: " + minDate + " & maxDate: " + maxDate);
+        var chart = dc.barChart('#speed-line2');
+        var scaler = d3_time_scale_prototype_1.getLinearScale();
+        scaler.domain([minDate, maxDate]);
+        var xAxis = d3.svg.axis().scale(scaler);
+        chart
+            .x(scaler)
+            .brushOn(false)
+            .clipPadding(10)
+            .yAxisLabel("This is the Y Axis!")
+            .xAxis(xAxis)
+            .dimension(timeDimension)
+            .group(speedGroup)
+            .valueAccessor(function (d) { return d.value.avg; });
+        chart.render();
+        chart.on('renderlet', function (d) {
+            chart.selectAll('rect').on("click", function (d1) {
+                // console.log("click!", d1);
+                console.log("" + momentJ(d1.x).format('jYYYY/jM/jD HH:mm'));
+            });
+        });
+    };
+    TrucksApp.prototype.drawSpeedChartOld = function (data) {
         var irLocale = d3.locale({
             decimal: '.',
             thousands: ',',
@@ -156,4 +205,3 @@ var TrucksApp = (function () {
 }());
 exports.TrucksApp = TrucksApp;
 var app = new TrucksApp();
-//# sourceMappingURL=trucks.js.map

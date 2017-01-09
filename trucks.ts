@@ -4,6 +4,7 @@ import * as crossfilter from 'crossfilter';
 import * as dc from 'dc';
 import moment = require('moment-timezone');
 import momentJ = require('moment-jalaali');
+import {getLinearScale} from './d3-time-scale-prototype';
 
 
 export interface Truck {
@@ -102,7 +103,7 @@ export class TrucksApp {
     }
 
     redraw() {
-        d3.json('data/trucks.json', this.callback);
+        // d3.json('data/trucks.json', this.callback);
     }
 
     callback(data: Truck[]) {
@@ -176,9 +177,70 @@ export class TrucksApp {
         dc.renderAll();
     }
 
-    getSpeeds () { d3.json('data/speeds.json', this.drawSpeedChart); }
+    getSpeeds () { d3.json('data/speeds.json', (err: any, data: any) =>{
+        this.drawSpeedChart(data);
+        // this.drawSpeedChartOld(data);
+    }) ;
+    }
 
     drawSpeedChart(data: GPSTrackerCoordinate[]) {
+        data = data.slice(10, 40);
+        let ndx = crossfilter(data);
+        let timeDimension = ndx.dimension((d: GPSTrackerCoordinate) => d.timestamp);
+        let speedGroup = timeDimension.group()
+            .reduce((p: GroupKey, v: GPSTrackerCoordinate) => {
+                ++p.number;
+                p.total += +v.speed;
+                p.avg = Math.round(p.total / p.number);
+                return p;
+            }, (p: GroupKey, v: GPSTrackerCoordinate) => {
+                --p.number;
+                p.total -= +v.speed;
+                p.avg = (p.number == 0) ? 0 : Math.round(p.total / p.number);
+                return p;
+            }, function () {
+                return { number: 0, total: 0, avg: 0}
+            });
+
+        let minDate = timeDimension.bottom(1)[0].timestamp;
+        let maxDate = timeDimension.top(1)[0].timestamp;
+
+        console.log(`minDate: ${minDate} & maxDate: ${maxDate}`);
+
+        let chart = dc.barChart('#speed-line2');
+
+        let scaler = getLinearScale();
+        scaler.domain([minDate, maxDate]);
+
+        let xAxis = d3.svg.axis().scale(scaler);
+
+        chart
+            .x(scaler)
+            .brushOn(false)
+            .clipPadding(10)
+            .yAxisLabel("This is the Y Axis!")
+            .xAxis(xAxis)
+            .dimension(timeDimension)
+            .group(speedGroup)
+            .valueAccessor((d: KeyGroupKey) => d.value.avg)
+            // .on('mouseover', function (d) {
+            //     console.log(d);
+            // })
+        ;
+
+        chart.render();
+
+        chart.on('renderlet', function (d) {
+            chart.selectAll('rect').on("click", function(d1) {
+                // console.log("click!", d1);
+                console.log(`${momentJ(d1.x).format('jYYYY/jM/jD HH:mm')}`)
+            });
+
+        });
+
+    }
+
+    drawSpeedChartOld(data: GPSTrackerCoordinate[]) {
         let irLocale = d3.locale({
             decimal: '.',
             thousands: ',',
